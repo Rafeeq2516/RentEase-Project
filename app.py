@@ -11,15 +11,17 @@ products = [
 @app.route("/", methods=["GET", "POST"])
 def home():
     total = None
-    
     if request.method == "POST":
         index = int(request.form["product"])
         months = int(request.form["months"])
-        
         selected = products[index]
         total = selected["rent"] * months + selected["deposit"]
-
     return render_template("index.html", products=products, total=total)
+
+# ✅ THIS MUST BE OUTSIDE home() (same indent level)
+@app.route("/cart")
+def cart_page():
+    return render_template("cart.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

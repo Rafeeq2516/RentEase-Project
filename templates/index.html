@@ -4,54 +4,42 @@
     <title>RentEase</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<script>
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-function updateCartCount() {
-    document.getElementById("cart-count").innerText = cart.length;
-}
-
-function addToCart(productName) {
-    cart.push(productName);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    updateCartCount();
-    alert(productName + " added to cart!");
-}
-
-updateCartCount();
-</script>
 <body>
 
-<!-- NAVBAR -->
+<!-- Navbar -->
 <div class="navbar">
     <div class="logo">RentEase</div>
     <div class="nav-links">
-        <a href="#">Home</a>
+        <a href="/">Home</a>
         <a href="#products">Products</a>
-        <a href="#">Contact</a>
-        <a href="#">Login</a>
-        <a href="#" id="cart-link">Cart (<span id="cart-count">0</span>)</a>
+        <a href="/cart">Cart (<span id="cart-count">0</span>)</a>
     </div>
 </div>
 
-<!-- HERO SECTION -->
+<!-- Hero Section -->
 <div class="hero">
     <h1>Affordable Furniture Rentals for Urban Living</h1>
     <p>Flexible plans. Zero hassle. Easy relocation.</p>
     <a href="#products" class="hero-btn">Browse Now</a>
 </div>
 
-<!-- PRODUCTS SECTION -->
-<div class="container" id="products">
+<!-- Products Section -->
+<div id="products" class="products-container">
 
     {% for product in products %}
-    <div class="card">
-        <img src="{{ url_for('static', filename='images/' + product.image) }}">
+    <div class="product-card">
+        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+        
         <h3>{{ product.name }}</h3>
         <p>Monthly Rent: ₹{{ product.rent }}</p>
         <p>Deposit: ₹{{ product.deposit }}</p>
 
-        <button onclick="addToCart('{{ product.name }}')">
+        <button onclick='addToCart({
+            "name":"{{ product.name }}",
+            "rent": {{ product.rent }},
+            "deposit": {{ product.deposit }},
+            "image":"{{ product.image }}"
+        })'>
             Add to Cart
         </button>
     </div>
@@ -59,11 +47,24 @@ updateCartCount();
 
 </div>
 
-<!-- SCRIPT -->
+<!-- Script -->
 <script>
-function addToCart(productName) {
-    alert(productName + " added to cart!");
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function updateCartCount() {
+    document.getElementById("cart-count").innerText = cart.length;
 }
+
+function addToCart(productObj) {
+    cart.push(productObj);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    alert(productObj.name + " added to cart!");
+}
+
+updateCartCount();
+
 </script>
 
 </body>
